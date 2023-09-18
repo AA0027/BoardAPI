@@ -1,6 +1,6 @@
 package com.example.test.service;
 
-import com.example.test.dao.Member;
+import com.example.test.dao.login.Member;
 import com.example.test.dto.MemberForm;
 import com.example.test.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
