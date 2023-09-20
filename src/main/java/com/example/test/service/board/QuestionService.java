@@ -2,15 +2,17 @@ package com.example.test.service.board;
 
 import com.example.test.dao.board.Question;
 import com.example.test.dto.QuestionForm;
-import com.example.test.repository.board.QuestionRepository;
-import jakarta.transaction.Transactional;
+
+
+import com.example.test.repository.QuestionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
+@Transactional(readOnly = true)
 @Service
 @RequiredArgsConstructor
 public class QuestionService {

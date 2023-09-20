@@ -1,5 +1,6 @@
 package com.example.test.dao.board;
 
+import com.example.test.dto.AnswerForm;
 import jakarta.persistence.*;
 
 import lombok.AccessLevel;
@@ -25,7 +26,7 @@ public class Answer {
 
     private LocalDateTime createDate;
 
-    @ManyToOne
+    @ManyToOne()
     private Question question;
 
     @Builder
@@ -34,5 +35,13 @@ public class Answer {
         this.content = content;
         this.createDate = time;
         this.question = q;
+    }
+
+    public AnswerForm toForm()
+    {
+        AnswerForm answerForm = new AnswerForm();
+        answerForm.setContent(content);
+        answerForm.setLocalDateTime(createDate);
+        return answerForm;
     }
 }

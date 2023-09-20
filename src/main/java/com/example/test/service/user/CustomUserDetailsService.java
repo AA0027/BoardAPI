@@ -1,6 +1,7 @@
-package com.example.test.service;
+package com.example.test.service.user;
 
-import com.example.test.dao.login.Member;
+import com.example.test.dao.Member;
+import com.example.test.service.user.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

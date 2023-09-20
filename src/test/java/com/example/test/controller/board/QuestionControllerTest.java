@@ -2,7 +2,7 @@ package com.example.test.controller.board;
 
 import com.example.test.dao.board.Question;
 import com.example.test.dto.QuestionForm;
-import com.example.test.repository.board.QuestionRepository;
+import com.example.test.repository.QuestionRepository;
 import com.example.test.service.board.QuestionService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -129,7 +130,7 @@ class QuestionControllerTest {
                 .content(requestBody));
 
         List<Question> questions = repo.findAll();
-
+        result.andExpect(status().isCreated());
         assertThat(questions.size()).isEqualTo(1);
         assertThat(questions.get(0).getSubject()).isEqualTo(subject);
         assertThat(questions.get(0).getContent()).isEqualTo(content);

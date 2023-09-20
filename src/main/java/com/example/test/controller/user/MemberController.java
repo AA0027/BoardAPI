@@ -1,7 +1,8 @@
-package com.example.test.controller;
+package com.example.test.controller.user;
 
 import com.example.test.dto.MemberForm;
-import com.example.test.service.MemberService;
+import com.example.test.service.user.MemberService;
+import com.example.test.service.user.MemberService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
