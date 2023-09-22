@@ -40,10 +40,10 @@ public class AnswerController {
         return ResponseEntity.ok().body(answer.toForm());
     }
 
-    @GetMapping("/answers")
-    public ResponseEntity<List<AnswerForm>> getAnswerList()
+    @GetMapping("/{id}/answers")
+    public ResponseEntity<List<AnswerForm>> getAnswerList(@PathVariable("id") long id)
     {
-        List<Answer> answerList = answerService.findAll();
+        List<Answer> answerList = questionService.findAnswers(id);
         List<AnswerForm> response = answerList.stream().map(Answer::toForm).toList();
         return ResponseEntity.ok().body(response);
     }

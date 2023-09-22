@@ -62,24 +62,7 @@ class AnswerControllerTest {
     {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
         questionRepo.deleteAll();
-        Question question1 = Question.builder()
-                .time(LocalDateTime.now()).subject("question1").content("sdfefdf").build();
-        Question question2 = Question.builder()
-                .time(LocalDateTime.now()).subject("question1").content("sdfefdf").build();
 
-        questionRepo.save(question1);questionRepo.save(question2);
-
-        Answer answer1 = Answer.builder().content("one").q(question1).time(LocalDateTime.now()).build();
-        Answer answer2 = Answer.builder().content("tow").q(question1).time(LocalDateTime.now()).build();
-        Answer answer3 = Answer.builder().content("three").q(question1).time(LocalDateTime.now()).build();
-        Answer answer4 = Answer.builder().content("four").q(question2).time(LocalDateTime.now()).build();
-        Answer answer5 = Answer.builder().content("five").q(question2).time(LocalDateTime.now()).build();
-
-        answerRepository.save(answer1);
-        answerRepository.save(answer2);
-        answerRepository.save(answer3);
-        answerRepository.save(answer4);
-        answerRepository.save(answer5);
 
 
     }
@@ -119,12 +102,29 @@ class AnswerControllerTest {
 
     @Test
     void getAnswerList() throws Exception{
-        final String url = "/answers";
-        List<Answer> list = answerRepository.findAll();
+        final String url = "/{id}/answers";
+        Question question1 = Question.builder()
+                .time(LocalDateTime.now()).subject("question1").content("sdfefdf").build();
+        Question question2 = Question.builder()
+                .time(LocalDateTime.now()).subject("question1").content("sdfefdf").build();
 
-        ResultActions result = mockMvc.perform(get(url).contentType(MediaType.APPLICATION_JSON));
+        questionRepo.save(question1);questionRepo.save(question2);
+
+        Answer answer1 = Answer.builder().content("one").q(question1).time(LocalDateTime.now()).build();
+        Answer answer2 = Answer.builder().content("tow").q(question1).time(LocalDateTime.now()).build();
+        Answer answer3 = Answer.builder().content("three").q(question1).time(LocalDateTime.now()).build();
+        Answer answer4 = Answer.builder().content("four").q(question2).time(LocalDateTime.now()).build();
+        Answer answer5 = Answer.builder().content("five").q(question2).time(LocalDateTime.now()).build();
+
+        answerRepository.save(answer1);
+        answerRepository.save(answer2);
+        answerRepository.save(answer3);
+
+        List<Answer> list = questionService.findAnswers(question1.getId());
+
+        ResultActions result = mockMvc.perform(get(url, question1.getId()).contentType(MediaType.APPLICATION_JSON));
         result.andExpect(status().isOk());
-        Assertions.assertThat(list.size()).isEqualTo(5);
+        Assertions.assertThat(list.size()).isEqualTo(3);
     }
 
     @Test
