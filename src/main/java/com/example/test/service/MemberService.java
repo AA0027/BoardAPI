@@ -7,7 +7,9 @@ import com.example.test.dao.Question;
 import com.example.test.dto.AnswerForm;
 import com.example.test.dto.MemberForm;
 import com.example.test.dto.QuestionForm;
+import com.example.test.repository.AnswerRepository;
 import com.example.test.repository.MemberRepository;
+import com.example.test.repository.QuestionRepository;
 import lombok.RequiredArgsConstructor;
 ;
 import org.springframework.stereotype.Service;
@@ -15,10 +17,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Transactional()
 @Service
 @RequiredArgsConstructor
 public class MemberService  {
     private final MemberRepository repo;
+    private final QuestionRepository questionRepo;
+
+    private final AnswerRepository answerRepo;
 
     public Member findMember(long id)
     {
@@ -31,6 +37,12 @@ public class MemberService  {
     {
         return repo.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("not found: " + email));
+    }
+
+    public Member findByname(String name)
+    {
+        return repo.findByName(name)
+                .orElseThrow(() -> new IllegalArgumentException("not found: " + name));
     }
 
     public Member create(MemberForm member)
@@ -46,7 +58,7 @@ public class MemberService  {
 
     public List<QuestionForm> findAllQuestion(String email)
     {
-        List<Question> questions = repo.findQuestions(email).
+        List<Question> questions = questionRepo.findQuestions(email).
                 orElseThrow(() -> new IllegalArgumentException("not found: " + email));
         List<QuestionForm> list = questions.stream().map(Question::toForm).toList();
         return list;
@@ -54,7 +66,7 @@ public class MemberService  {
 
     public List<AnswerForm> findAllAnswer(String email)
     {
-        List<Answer> answers = repo.findAnswers(email).
+        List<Answer> answers = answerRepo.findAnswers(email).
                 orElseThrow(() -> new IllegalArgumentException("not found: " + email));
         List<AnswerForm> list = answers.stream().map(Answer::toForm).toList();
         return list;
@@ -67,12 +79,10 @@ public class MemberService  {
         return members;
     }
     @Transactional
-    public void updateMember(String name, MemberForm memberForm)
+    public void updateMember(Member member, MemberForm memberForm)
     {
-        Member member = repo.findByName(name)
-                .orElseThrow(() -> new IllegalArgumentException("not found: " + name));
         member.setEmail(memberForm.getEmail());
-        member.setAddr(member.getAddr());
+        member.setAddr(memberForm.getAddr());
         repo.save(member);
     }
 

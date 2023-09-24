@@ -12,8 +12,10 @@ import java.util.Optional;
 public interface AnswerRepository extends JpaRepository<Answer, Long> {
     Optional<Answer> findByContent(String content);
 
-    @Query("select a from Answer a join question on question.id = a.question.id where question.id = ?1")
+    @Query("select a from Answer a join question q on q.id = a.question.id where q.id = ?1")
     Optional<List<Answer>> findAnswers(long id);
 
-
+    //사용자가 작성한 모든 답변 보여줌
+    @Query("select a from Answer a join Member m on a.member.id = m.id where m.email = ?1")
+    public Optional<List<Answer>> findAnswers(String email);
 }

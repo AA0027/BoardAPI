@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Transactional(readOnly = true)
+@Transactional()
 @Service
 @RequiredArgsConstructor
 public class QuestionService {

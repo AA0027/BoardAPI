@@ -36,10 +36,10 @@ public class Member {
 
     public MemberForm toForm()
     {
-        MemberForm memberForm = new MemberForm();
-        memberForm.setName(name);
-        memberForm.setAddr(addr);
-        memberForm.setEmail(email);
+        MemberForm memberForm = MemberForm.builder().addr(addr)
+                .email(email)
+                .name(name)
+                .build();
         return memberForm;
     }
 

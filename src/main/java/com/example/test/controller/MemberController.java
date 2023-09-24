@@ -4,6 +4,7 @@ import com.example.test.dao.Member;
 import com.example.test.dto.AnswerForm;
 import com.example.test.dto.MemberForm;
 import com.example.test.dto.QuestionForm;
+import com.example.test.repository.MemberRepository;
 import com.example.test.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -24,6 +25,7 @@ public class MemberController {
     public ResponseEntity<MemberForm> createMember(@RequestBody MemberForm memberForm)
     {
         Member response = memberService.create(memberForm);
+
         return ResponseEntity.status(HttpStatus.CREATED).body(response.toForm());
     }
 
@@ -38,7 +40,7 @@ public class MemberController {
     }
 
     //모든 멤버 검색
-    @GetMapping
+    @GetMapping("/members")
     public ResponseEntity<List<MemberForm>> getMembers()
     {
         List<MemberForm> response = memberService.findMembers();
@@ -71,11 +73,11 @@ public class MemberController {
     }
 
     //멤버 정보 변경
-    @PutMapping("/members/{email}")
-    public ResponseEntity<MemberForm> updateMember(@RequestBody MemberForm memberForm, @PathVariable("email") String email)
+    @PutMapping("/members/{name}")
+    public ResponseEntity<MemberForm> updateMember(@RequestBody MemberForm memberForm, @PathVariable("name") String name)
     {
-        Member response = memberService.findMember(email);
-        memberService.updateMember(response.getName(), memberForm);
+        Member response = memberService.findByname(name);
+        memberService.updateMember(response, memberForm);
         return ResponseEntity.ok().body(response.toForm());
     }
 
