@@ -1,4 +1,4 @@
-package com.example.test.dao.board;
+package com.example.test.dao;
 
 import com.example.test.dto.AnswerForm;
 import jakarta.persistence.*;
@@ -29,12 +29,15 @@ public class Answer {
     @ManyToOne()
     private Question question;
 
+    @ManyToOne()
+    private Member member;
     @Builder
-    public Answer(String content,LocalDateTime time,Question q)
+    public Answer(String content,LocalDateTime time,Question q,Member member)
     {
         this.content = content;
         this.createDate = time;
         this.question = q;
+        this.member = member;
     }
 
     public AnswerForm toForm()

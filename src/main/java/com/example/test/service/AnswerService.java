@@ -1,18 +1,17 @@
-package com.example.test.service.board;
+package com.example.test.service;
 
-import com.example.test.dao.board.Answer;
-import com.example.test.dao.board.Question;
+import com.example.test.dao.Answer;
+import com.example.test.dao.Member;
+import com.example.test.dao.Question;
 import com.example.test.dto.AnswerForm;
 import com.example.test.repository.AnswerRepository;
 
-import com.example.test.repository.QuestionRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.StringTokenizer;
 
 
 @Service
@@ -21,12 +20,13 @@ public class AnswerService {
     private final AnswerRepository answerRepo;
 
     //답변 생성
-    public Answer create(Question q,AnswerForm answerForm)
+    public Answer create(Member m, Question q, AnswerForm answerForm)
     {
         Answer answer = Answer.builder().
                 content(answerForm.getContent())
                 .time(LocalDateTime.now())
                 .q(q)
+                .member(m)
                 .build();
 
         answerRepo.save(answer);

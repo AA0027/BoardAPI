@@ -1,7 +1,8 @@
-package com.example.test.service.board;
+package com.example.test.service;
 
-import com.example.test.dao.board.Answer;
-import com.example.test.dao.board.Question;
+import com.example.test.dao.Answer;
+import com.example.test.dao.Member;
+import com.example.test.dao.Question;
 import com.example.test.dto.QuestionForm;
 
 
@@ -20,11 +21,11 @@ import java.util.List;
 public class QuestionService {
     private final QuestionRepository questionRepository;
     private final AnswerRepository answerRepository;
-    public Question create(QuestionForm q)
+    public Question create(Member m, QuestionForm q)
     {
 
         Question question = Question.builder().subject(q.getSubject()).content(q.getContent())
-                .time(LocalDateTime.now()).build();
+                .time(LocalDateTime.now()).member(m).build();
 
         questionRepository.save(question);
         return question;

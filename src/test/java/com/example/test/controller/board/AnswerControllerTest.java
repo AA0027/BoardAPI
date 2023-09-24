@@ -1,12 +1,12 @@
 package com.example.test.controller.board;
 
-import com.example.test.dao.board.Answer;
-import com.example.test.dao.board.Question;
+import com.example.test.dao.Answer;
+import com.example.test.dao.Question;
 import com.example.test.dto.AnswerForm;
 import com.example.test.repository.AnswerRepository;
 import com.example.test.repository.QuestionRepository;
-import com.example.test.service.board.AnswerService;
-import com.example.test.service.board.QuestionService;
+import com.example.test.service.AnswerService;
+import com.example.test.service.QuestionService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

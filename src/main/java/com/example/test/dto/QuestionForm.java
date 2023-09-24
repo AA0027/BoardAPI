@@ -1,7 +1,6 @@
 package com.example.test.dto;
 
-import com.example.test.dao.board.Question;
-import lombok.AccessLevel;
+import com.example.test.dao.Question;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

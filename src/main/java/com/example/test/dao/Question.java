@@ -1,8 +1,7 @@
-package com.example.test.dao.board;
+package com.example.test.dao;
 
 
 import com.example.test.dto.QuestionForm;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -29,26 +28,30 @@ public class Question {
 
     private LocalDateTime createDate;
 
+    @ManyToOne
+    private Member member;
 
     @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE)
     private List<Answer> answerList;
 
-    public Question(String subject, String content)
+    public Question(String subject, String content, Member member)
     {
         this.subject = subject;
         this.content = content;
+        this.member = member;
         this.createDate = LocalDateTime.now();
     }
     @Builder
-    public Question(String subject, String content,LocalDateTime time,List<Answer> answers)
+    public Question(String subject, String content,LocalDateTime time,Member member)
     {
         this.subject = subject;
         this.content = content;
         this.createDate = time;
+        this.member = member;
 
     }
 
-    public QuestionForm change()
+    public QuestionForm toForm()
     {
         QuestionForm questionForm = new QuestionForm(subject, content);
         return questionForm;
