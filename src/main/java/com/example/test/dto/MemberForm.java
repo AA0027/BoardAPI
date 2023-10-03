@@ -1,20 +1,15 @@
 package com.example.test.dto;
 
-import lombok.*;
+import jakarta.annotation.sql.DataSourceDefinitions;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor(access = AccessLevel.PUBLIC)
+@NoArgsConstructor
+@AllArgsConstructor
 public class MemberForm {
-
     private String name;
     private String email;
-    private String addr;
-
-    @Builder
-    public MemberForm(String name, String email, String addr)
-    {
-        this.name = name;
-        this.email = email;
-        this.addr = addr;
-    }
+    private Region region;
 }

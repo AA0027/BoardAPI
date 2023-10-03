@@ -1,85 +1,88 @@
 package com.example.test.controller;
 
+import com.example.test.assembler.MemberAssembler;
 import com.example.test.dao.Member;
-import com.example.test.dto.AnswerForm;
 import com.example.test.dto.MemberForm;
-import com.example.test.dto.QuestionForm;
 import com.example.test.repository.MemberRepository;
 import com.example.test.service.MemberService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.IanaLinkRelations;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-
 import java.util.List;
+import java.util.stream.Collectors;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/hateos")
 public class MemberController {
-    private final MemberService memberService;
-
-    //새로운 멤버 생성
-    @PostMapping("/members")
-    public ResponseEntity<MemberForm> createMember(@RequestBody MemberForm memberForm)
-    {
-        Member response = memberService.create(memberForm);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(response.toForm());
-    }
-
-    //멤버 삮제
-    @DeleteMapping("/members/{email}")
-    public ResponseEntity<Void> deleteMember(@PathVariable("email") String email)
-    {
-        Member member = memberService.findMember(email);
-        memberService.deleteMember(member.getName());
-        return ResponseEntity.ok().build();
-
-    }
-
-    //모든 멤버 검색
+    private final MemberRepository repo;
+    private final MemberService service;
+    private final MemberAssembler assembler;
     @GetMapping("/members")
-    public ResponseEntity<List<MemberForm>> getMembers()
+    public CollectionModel<EntityModel<Member>> all()
     {
-        List<MemberForm> response = memberService.findMembers();
-        return ResponseEntity.ok().body(response);
+        List<Member> list = repo.findAll();
+        List<EntityModel<Member>> entity = list.stream().map(assembler :: toModel).collect(Collectors.toList());
+        return CollectionModel.of(entity,
+                linkTo(methodOn(MemberController.class).all()).withSelfRel());
+
     }
 
-    //email로 멤버 검색
-    @GetMapping("/members/{email}")
-    public ResponseEntity<MemberForm> getMember(@PathVariable("email") String email)
+    @GetMapping("/members/{id}")
+    public EntityModel<Member> one(@PathVariable("id")long id)
     {
-        Member response = memberService.findMember(email);
-        return ResponseEntity.ok().body(response.toForm());
+        Member member = repo.findById(id).orElseThrow(() -> new IllegalArgumentException("id"+id));
+        return assembler.toModel(member);
     }
 
-    //멤버가작성한 모든 질문검색
-    @GetMapping("/members/{email}/questions")
-    public  ResponseEntity<List<QuestionForm>> getQuestions(@PathVariable("email") String email)
+    @PostMapping(value = "/members", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> createJson(@RequestBody MemberForm form)
     {
-        List<QuestionForm> response = memberService.findAllQuestion(email);
-        return ResponseEntity.ok().body(response);
+        Member member = new Member(form.getName(),form.getEmail(),form.getRegion());
+        EntityModel<Member> entity = assembler.toModel(repo.save(member));
+        return ResponseEntity.created(entity.getRequiredLink(IanaLinkRelations.SELF)
+                .toUri()).body(entity);
     }
 
-
-    //멤버가 작성한 모든 답변검색
-    @GetMapping("/members/{email}/answers")
-    public  ResponseEntity<List<AnswerForm>> getAnswers(@PathVariable("email") String email)
+    @PostMapping(value = "/members", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    public ResponseEntity<?> createForm(@RequestBody MemberForm form)
     {
-        List<AnswerForm> response = memberService.findAllAnswer(email);
-        return ResponseEntity.ok().body(response);
+        Member member = new Member(form.getName(),form.getEmail(),form.getRegion());
+        EntityModel<Member> entity = assembler.toModel(repo.save(member));
+        return ResponseEntity.created(entity.getRequiredLink(IanaLinkRelations.SELF)
+                .toUri()).body(entity);
     }
 
-    //멤버 정보 변경
-    @PutMapping("/members/{name}")
-    public ResponseEntity<MemberForm> updateMember(@RequestBody MemberForm memberForm, @PathVariable("name") String name)
+    @PutMapping(value="/members/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> changeMemberJson(@RequestBody MemberForm form, @PathVariable("id") long id)
     {
-        Member response = memberService.findByname(name);
-        memberService.updateMember(response, memberForm);
-        return ResponseEntity.ok().body(response.toForm());
+        Member member = service.update(form, id);
+        EntityModel<Member> entity = assembler.toModel(member);
+        return ResponseEntity.created(entity.getRequiredLink(IanaLinkRelations.SELF).toUri())
+                .body(entity);
     }
 
+    @PutMapping(value="/members/{id}", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    public ResponseEntity<?> changeMemberForm(MemberForm form, @PathVariable("id") long id)
+    {
+        Member member = service.update(form, id);
+        EntityModel<Member> entity = assembler.toModel(member);
+        return ResponseEntity.created(entity.getRequiredLink(IanaLinkRelations.SELF).toUri())
+                .body(entity);
+    }
 
+    @DeleteMapping(value = "/members/{id}")
+    public ResponseEntity<?> deleteMember(@PathVariable("id") long id)
+    {
+        repo.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
 }

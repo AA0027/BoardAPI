@@ -1,53 +1,37 @@
 package com.example.test.dao;
 
-import com.example.test.dto.MemberForm;
+import com.example.test.dto.Region;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.antlr.v4.runtime.misc.NotNull;
 
-import java.util.Collection;
-import java.util.List;
-@Table(name = "member")
-@Entity()
 @Data
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Entity
+@AllArgsConstructor
+@NoArgsConstructor
+@Table(name = "member")
 public class Member {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @Id()
+    @GeneratedValue
+    private long id;
 
+    @Column(nullable = false)
     private String name;
 
+    @Column(nullable = false)
     private String email;
 
-    private String addr;
+    @Column(nullable = false)
+    private Region region;
 
-    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
-    private List<Question> questions;
-
-    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
-    private List<Answer> answers;
-
-    public MemberForm toForm()
-    {
-        MemberForm memberForm = MemberForm.builder().addr(addr)
-                .email(email)
-                .name(name)
-                .build();
-        return memberForm;
-    }
-
-    @Builder
-    public Member(String name, String email,String addr)
+    public Member(String name, String email,Region region)
     {
         this.name = name;
-        this.addr = addr;
         this.email = email;
+        this.region = region;
     }
+
+
 }
