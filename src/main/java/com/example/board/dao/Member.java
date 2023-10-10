@@ -23,6 +23,8 @@ public class Member {
     private String password;
     @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
     private List<BoardDao> board;
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
+    private List<Answer> answers;
     public static Member createMember(String email, String password, PasswordEncoder passwordEncoder)
     {
         Member member = Member.builder().email(email).password(passwordEncoder.encode(password))

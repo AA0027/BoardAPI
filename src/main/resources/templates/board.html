@@ -3,19 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/bootstrap.css"/>
     <title>게시물 상세보기</title>
 </head>
 <body>
-<H1 th:text="${board.title}"></H1>
-<div>작성자 email : <span th:text="${board.member.email}"></span></div>
-<div>제목 : <span th:text="${board.title}"></span></div>
-<div>조회수 : <span th:text="${board.viewCnt}"></span></div>
-<div>작성일 : <span th:text="${board.createDate}"></span></div>
-<div>내용 : <span th:text="${board.content}"></span></div>
+<H1><b>계 시 글</b></H1>
+<!--<div>email : <span th:text="${board.member.email}"></span></div>-->
+<!--<div>제목 : <span th:text="${board.title}"></span></div>-->
+<!--<div>조회수 : <span th:text="${board.viewCnt}"></span></div>-->
+<!--<div>작성일 : <span th:text="${board.createDate}"></span></div>-->
+<!--<div>내용 : <span th:text="${board.content}"></span></div>-->
+
+<ul class="list-group">
+    email: <li class="list-group-item" th:text="${board.member.email}"></li>
+    제목  : <li class="list-group-item" th:text="${board.title}"></li>
+    조회수:<li class="list-group-item" th:text="${board.viewCnt}"></li>
+    작성일:<li class="list-group-item" th:text="${board.createDate}"></li>
+    내용  :<li class="list-group-item" th:text="${board.content}"></li>
+</ul>
 
 <div><a href="/myBoard/boardList">목록보기</a></div>
 <!-- 로그인하지 않은 상황이라면 수정하기, 삭제하기 링크가 비활성화. 로그인한 사용자가 쓴 글인가? -->
 <div><a th:href="@{/myBoard/boardList/board/update(id=${board.board_id})}">수정하기</a></div>
 <div><a th:href="@{/myBoard/boardList/board/delete(id=${board.board_id})}">삭제하기</a></div>
+<!--답글목록-->
+<div>
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">작성자</th>
+            <th scope="col">내용</th>
+            <th scope="col">**</th>
+            <th scope="col">**</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="answer : ${answers}">
+            <th scope="row">2</th>
+            <td th:text="${answer.member.email}"></td>
+            <td th:text="${answer.reply}"></td>
+            <td><a th:href="@{/myBoard/boardList/detail/answer/update(id=${answer.id})}" th:text="수정"></a></td>
+            <td><a th:href="@{/myBoard/boardList/detail/answer/delete(id=${answer.id})}" th:text="삭제"></a></td>
+        </tr>
+        </tbody>
+    </table>
+    <a href="/myBoard/boardList/detail/answer/create">댓글작성</a>
+</div>
+
+
 </body>
 </html>

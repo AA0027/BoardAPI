@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>수정</title>
+</head>
+<body>
+<form  method="post">
+  <div class="input-group">
+    <span class="input-group-text">내용: </span><br>
+    <textarea class="form-control" aria-label="With textarea" name="reply" th:text="${answer.reply}"></textarea>
+    <input type="submit" value="수정완료">
+  </div>
+</form>
+</body>
+</html>

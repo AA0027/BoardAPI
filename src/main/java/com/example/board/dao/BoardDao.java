@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "board")
@@ -23,6 +24,8 @@ public class BoardDao {
     private int viewCnt;
     @ManyToOne
     private Member member;
+    @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE)
+    private List<Answer> answers;
 
     @Builder
     public BoardDao(String title, String content, LocalDateTime createDate, int viewCnt, Member member)
